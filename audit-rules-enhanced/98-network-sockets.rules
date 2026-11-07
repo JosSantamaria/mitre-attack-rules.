@@ -1,0 +1,30 @@
+# ============================================================================
+# 98-network-sockets.rules - Network Socket Monitoring
+# ============================================================================
+# Framework: MITRE ATT&CK T1071 (Application Layer Protocol)
+# Compatible: SUSE SLES 12+, SLES 15+, openSUSE Leap 15.x
+# ============================================================================
+
+# --- IPv4 Socket Creation ---
+-a always,exit -F arch=b64 -S socket -F a0=2 -k MITRE:CommandAndControl:T1071:IPv4Socket
+
+# --- IPv6 Socket Creation ---
+-a always,exit -F arch=b64 -S socket -F a0=10 -k MITRE:CommandAndControl:T1071:IPv6Socket
+
+# --- Successful IPv4 Connections ---
+-a always,exit -F arch=b64 -S connect -F a2=16 -F success=1 -F key=MITRE:CommandAndControl:T1071:IPv4Connect
+
+# --- Successful IPv6 Connections ---
+-a always,exit -F arch=b64 -S connect -F a2=28 -F success=1 -F key=MITRE:CommandAndControl:T1071:IPv6Connect
+
+# --- Mount Operations ---
+-a always,exit -F arch=b64 -S mount -S umount2 -F auid!=-1 -k MITRE:Persistence:T1547:Mount
+
+# --- Time Changes (T1070.006) ---
+# Note: Removed uid!=ntp filter as ntp user may not exist on all systems
+-a always,exit -F arch=b64 -S adjtimex -S settimeofday -S clock_settime -F auid>=1000 -F auid!=-1 -k MITRE:DefenseEvasion:T1070.006:TimeChange
+-w /etc/localtime -p wa -k MITRE:DefenseEvasion:T1070.006:LocalTime
+
+# --- Stunnel (Encrypted Tunnels) ---
+-w /usr/sbin/stunnel -p x -k MITRE:CommandAndControl:T1573:Stunnel
+-w /usr/bin/stunnel -p x -k MITRE:CommandAndControl:T1573:Stunnel

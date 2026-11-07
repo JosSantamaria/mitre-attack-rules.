@@ -1,0 +1,36 @@
+# ============================================================================
+# 30-privilege-mitre.rules - Privilege Escalation Detection
+# ============================================================================
+# Framework: MITRE ATT&CK TA0004 (Privilege Escalation)
+# Techniques: T1548, T1068, T1078
+# Compatible: SUSE SLES 12+, SLES 15+, openSUSE Leap 15.x
+# ============================================================================
+
+# --- T1548.003 - Sudo and Sudo Caching ---
+-w /usr/bin/sudo -p x -k MITRE:PrivilegeEscalation:T1548.003:Sudo
+-w /etc/sudoers -p wa -k MITRE:PrivilegeEscalation:T1548.003:SudoersConfig
+-w /etc/sudoers.d/ -p wa -k MITRE:PrivilegeEscalation:T1548.003:SudoersConfig
+
+# --- T1548.003 - Su Command (Account Switching) ---
+# Note: su is part of T1548.003 (elevation) not T1078 (valid accounts)
+-w /usr/bin/su -p x -k MITRE:PrivilegeEscalation:T1548.003:Su
+-w /bin/su -p x -k MITRE:PrivilegeEscalation:T1548.003:Su
+
+# --- T1548.001 - Setuid and Setgid ---
+# Monitor chmod for setuid/setgid bit changes
+# Note: On x86_64, use only fchmodat/fchownat (chmod/chown/lchown are not direct syscalls)
+-a always,exit -F arch=b64 -S fchmod -S fchmodat -F auid>=1000 -F auid!=-1 -k MITRE:PrivilegeEscalation:T1548.001:SetuidSetgid
+-a always,exit -F arch=b64 -S fchown -S fchownat -F auid>=1000 -F auid!=-1 -k MITRE:PrivilegeEscalation:T1548.001:OwnerChange
+
+# --- T1068 - Exploitation for Privilege Escalation ---
+# Monitor pkexec (CVE-2021-4034 PwnKit)
+-w /usr/bin/pkexec -p x -k MITRE:PrivilegeEscalation:T1068:Pkexec
+
+# Monitor dbus-send (CVE-2021-3560)
+-w /usr/bin/dbus-send -p x -k MITRE:PrivilegeEscalation:T1068:DbusSend
+-w /usr/bin/gdbus -p x -k MITRE:PrivilegeEscalation:T1068:Gdbus
+
+# --- T1078.003 - Valid Accounts: Local Accounts ---
+# Monitor newgrp for group switching
+-w /usr/bin/newgrp -p x -k MITRE:PrivilegeEscalation:T1078.003:Newgrp
+-w /bin/newgrp -p x -k MITRE:PrivilegeEscalation:T1078.003:Newgrp

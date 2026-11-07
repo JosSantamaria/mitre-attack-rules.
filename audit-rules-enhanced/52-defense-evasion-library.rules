@@ -1,0 +1,28 @@
+# ============================================================================
+# 52-defense-evasion-library.rules - Library Hijacking Detection
+# ============================================================================
+# Framework: MITRE ATT&CK T1574 (Hijack Execution Flow)
+# Compatible: SUSE SLES 12+, SLES 15+, openSUSE Leap 15.x
+# ============================================================================
+
+# --- T1574.006 - Hijack Execution Flow: Dynamic Linker Hijacking ---
+# LD_PRELOAD and library path configuration
+-w /etc/ld.so.conf -p wa -k MITRE:DefenseEvasion:T1574.006:LdSoConf
+-w /etc/ld.so.conf.d/ -p wa -k MITRE:DefenseEvasion:T1574.006:LdSoConfD
+-w /etc/ld.so.preload -p wa -k MITRE:DefenseEvasion:T1574.006:LdPreload
+
+# --- T1055 - Process Injection ---
+# Monitor ptrace for code injection
+-a always,exit -F arch=b64 -S ptrace -F a0=0x4 -k MITRE:DefenseEvasion:T1055:CodeInjection
+-a always,exit -F arch=b64 -S ptrace -F a0=0x5 -k MITRE:DefenseEvasion:T1055:DataInjection
+-a always,exit -F arch=b64 -S ptrace -F a0=0x6 -k MITRE:DefenseEvasion:T1055:RegisterInjection
+-a always,exit -F arch=b64 -S ptrace -k MITRE:DefenseEvasion:T1055:Tracing
+
+# --- Anonymous File Creation (Fileless Malware) ---
+# memfd_create can be used for fileless execution
+-a always,exit -F arch=b64 -S memfd_create -F key=MITRE:DefenseEvasion:T1620:AnonFileCreate
+
+# --- SELinux/AppArmor Configuration ---
+-w /etc/selinux/ -p wa -k MITRE:DefenseEvasion:T1562.001:SELinux
+-w /etc/apparmor/ -p wa -k MITRE:DefenseEvasion:T1562.001:AppArmor
+-w /etc/apparmor.d/ -p wa -k MITRE:DefenseEvasion:T1562.001:AppArmorD

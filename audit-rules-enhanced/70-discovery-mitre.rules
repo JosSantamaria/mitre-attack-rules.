@@ -1,0 +1,39 @@
+# ============================================================================
+# 70-discovery-mitre.rules - Discovery and Reconnaissance
+# ============================================================================
+# Framework: MITRE ATT&CK TA0007 (Discovery)
+# Techniques: T1082, T1083, T1016, T1049, T1057
+# Compatible: SUSE SLES 12+, SLES 15+, openSUSE Leap 15.x
+# ============================================================================
+
+# --- T1082 - System Information Discovery ---
+-w /usr/bin/whoami -p x -k MITRE:Discovery:T1082:Whoami
+-w /usr/bin/id -p x -k MITRE:Discovery:T1082:Id
+-w /bin/hostname -p x -k MITRE:Discovery:T1082:Hostname
+-w /usr/bin/hostname -p x -k MITRE:Discovery:T1082:Hostname
+-w /bin/uname -p x -k MITRE:Discovery:T1082:Uname
+-w /usr/bin/uname -p x -k MITRE:Discovery:T1082:Uname
+-w /etc/issue -p r -k MITRE:Discovery:T1082:IssueRead
+-w /etc/hostname -p r -k MITRE:Discovery:T1082:HostnameRead
+-w /etc/os-release -p r -k MITRE:Discovery:T1082:OsRelease
+-w /etc/SuSE-release -p r -k MITRE:Discovery:T1082:SuSERelease
+
+# --- T1016 - System Network Configuration Discovery ---
+-w /usr/sbin/ifconfig -p x -k MITRE:Discovery:T1016:Ifconfig
+-w /sbin/ifconfig -p x -k MITRE:Discovery:T1016:Ifconfig
+-w /usr/bin/ip -p x -k MITRE:Discovery:T1016:IpCmd
+-w /sbin/ip -p x -k MITRE:Discovery:T1016:IpCmd
+-w /usr/bin/netstat -p x -k MITRE:Discovery:T1016:Netstat
+-w /usr/bin/ss -p x -k MITRE:Discovery:T1016:Ss
+-w /usr/sbin/route -p x -k MITRE:Discovery:T1016:Route
+-w /sbin/route -p x -k MITRE:Discovery:T1016:Route
+
+# --- T1049 - System Network Connections Discovery ---
+-w /usr/sbin/lsof -p x -k MITRE:Discovery:T1049:Lsof
+-w /usr/bin/lsof -p x -k MITRE:Discovery:T1049:Lsof
+
+# --- T1057 - Process Discovery ---
+-w /bin/ps -p x -k MITRE:Discovery:T1057:Ps
+-w /usr/bin/ps -p x -k MITRE:Discovery:T1057:Ps
+-w /usr/bin/top -p x -k MITRE:Discovery:T1057:Top
+-w /usr/bin/htop -p x -k MITRE:Discovery:T1057:Htop

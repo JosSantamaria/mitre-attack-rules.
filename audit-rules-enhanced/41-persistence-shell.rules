@@ -1,0 +1,33 @@
+# ============================================================================
+# 41-persistence-shell.rules - Shell Configuration Persistence
+# ============================================================================
+# Framework: MITRE ATT&CK T1546.004 (Unix Shell Configuration Modification)
+# Compatible: SUSE SLES 12+, SLES 15+, openSUSE Leap 15.x
+# ============================================================================
+
+# --- T1546.004 - Unix Shell Configuration Modification ---
+# System-wide shell profiles
+-w /etc/profile -p wa -k MITRE:Persistence:T1546.004:ShellProfile
+-w /etc/profile.d/ -p wa -k MITRE:Persistence:T1546.004:ShellProfileD
+-w /etc/bashrc -p wa -k MITRE:Persistence:T1546.004:Bashrc
+-w /etc/bash.bashrc -p wa -k MITRE:Persistence:T1546.004:Bashrc
+-w /etc/shells -p wa -k MITRE:Persistence:T1546.004:Shells
+
+# CSH/TCSH configuration
+-w /etc/csh.cshrc -p wa -k MITRE:Persistence:T1546.004:CshConfig
+-w /etc/csh.login -p wa -k MITRE:Persistence:T1546.004:CshConfig
+
+# ZSH configuration
+-w /etc/zsh/ -p wa -k MITRE:Persistence:T1546.004:ZshConfig
+-w /etc/zshenv -p wa -k MITRE:Persistence:T1546.004:ZshConfig
+-w /etc/zshrc -p wa -k MITRE:Persistence:T1546.004:ZshConfig
+-w /etc/zprofile -p wa -k MITRE:Persistence:T1546.004:ZshConfig
+
+# Fish shell configuration
+-w /etc/fish/ -p wa -k MITRE:Persistence:T1546.004:FishConfig
+
+# --- T1547.004 - Boot or Logon Autostart: SSH Authorized Keys ---
+-w /root/.ssh/ -p wa -k MITRE:Persistence:T1547.004:RootSSHKeys
+
+# --- Environment Variables ---
+-w /etc/environment -p wa -k MITRE:Persistence:T1546.004:Environment

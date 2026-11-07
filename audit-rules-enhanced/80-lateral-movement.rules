@@ -1,0 +1,35 @@
+# ============================================================================
+# 80-lateral-movement.rules - Lateral Movement Detection
+# ============================================================================
+# Framework: MITRE ATT&CK TA0008 (Lateral Movement)
+# Techniques: T1021, T1563
+# Compatible: SUSE SLES 12+, SLES 15+, openSUSE Leap 15.x
+# ============================================================================
+
+# --- T1021.004 - Remote Services: SSH ---
+-w /usr/bin/ssh -p x -k MITRE:LateralMovement:T1021.004:SSH
+-w /usr/bin/scp -p x -k MITRE:LateralMovement:T1021.004:SCP
+-w /usr/bin/sftp -p x -k MITRE:LateralMovement:T1021.004:SFTP
+-w /usr/bin/ssh-keygen -p x -k MITRE:LateralMovement:T1021.004:SSHKeygen
+-w /usr/bin/ssh-agent -p x -k MITRE:LateralMovement:T1021.004:SSHAgent
+-w /usr/bin/ssh-add -p x -k MITRE:LateralMovement:T1021.004:SSHAdd
+
+# --- T1021.002 - Remote Services: SMB/Windows Admin Shares ---
+-w /usr/bin/smbclient -p x -k MITRE:LateralMovement:T1021.002:SMBClient
+-w /usr/sbin/mount.cifs -p x -k MITRE:LateralMovement:T1021.002:MountCIFS
+
+# --- T1021.001 - Remote Services: RDP ---
+-w /usr/bin/rdesktop -p x -k MITRE:LateralMovement:T1021.001:Rdesktop
+-w /usr/local/bin/rdesktop -p x -k MITRE:LateralMovement:T1021.001:Rdesktop
+-w /usr/bin/xfreerdp -p x -k MITRE:LateralMovement:T1021.001:Xfreerdp
+-w /usr/local/bin/xfreerdp -p x -k MITRE:LateralMovement:T1021.001:Xfreerdp
+-w /usr/bin/wlfreerdp -p x -k MITRE:LateralMovement:T1021.001:Wlfreerdp
+
+# --- Remote Shell Detection ---
+-a always,exit -F arch=b64 -F exe=/bin/bash -F success=1 -S connect -k MITRE:LateralMovement:RemoteShell
+-a always,exit -F arch=b64 -F exe=/usr/bin/bash -F success=1 -S connect -k MITRE:LateralMovement:RemoteShell
+
+# --- NFS Mount (T1021.002) ---
+# Note: Using -w instead of -a with path to avoid errors if files don't exist
+-w /sbin/mount.nfs -p x -k MITRE:LateralMovement:T1021:NFSMount
+-w /usr/sbin/mount.nfs -p x -k MITRE:LateralMovement:T1021:NFSMount

@@ -1,0 +1,36 @@
+# ============================================================================
+# 21-identity-cis-extended.rules - Extended Identity Monitoring
+# ============================================================================
+# Framework: CIS Benchmark, MITRE ATT&CK T1556
+# Compatible: SUSE SLES 12+, SLES 15+, openSUSE Leap 15.x
+# ============================================================================
+
+# --- Login Configuration (CIS 4.1.4) ---
+-w /etc/login.defs -p wa -k CIS:Identity:4.1.4:LoginDefs
+-w /etc/securetty -p wa -k CIS:Identity:4.1.4:Securetty
+-w /etc/default/useradd -p wa -k CIS:Identity:4.1.4:UseraddDefaults
+
+# --- Login Logs ---
+-w /var/log/faillog -p wa -k CIS:Identity:LoginLogs:Faillog
+-w /var/log/lastlog -p wa -k CIS:Identity:LoginLogs:Lastlog
+-w /var/log/tallylog -p wa -k CIS:Identity:LoginLogs:Tallylog
+-w /var/log/btmp -p wa -k CIS:Identity:LoginLogs:Btmp
+-w /var/log/wtmp -p wa -k CIS:Identity:LoginLogs:Wtmp
+-w /var/run/utmp -p wa -k CIS:Identity:LoginLogs:Utmp
+
+# --- PAM Configuration ---
+# T1556.003 - Modify Authentication Process: Pluggable Authentication Modules
+-w /etc/pam.d/ -p wa -k MITRE:CredentialAccess:T1556.003:PAM
+-w /etc/security/limits.conf -p wa -k MITRE:CredentialAccess:T1556.003:PAMLimits
+-w /etc/security/limits.d/ -p wa -k MITRE:CredentialAccess:T1556.003:PAMLimits
+-w /etc/security/pam_env.conf -p wa -k MITRE:CredentialAccess:T1556.003:PAMEnv
+-w /etc/security/namespace.conf -p wa -k MITRE:CredentialAccess:T1556.003:PAMNamespace
+-w /etc/security/namespace.d/ -p wa -k MITRE:CredentialAccess:T1556.003:PAMNamespace
+-w /etc/security/namespace.init -p wa -k MITRE:CredentialAccess:T1556.003:PAMNamespace
+-w /etc/security/access.conf -p wa -k MITRE:CredentialAccess:T1556.003:PAMAccess
+-w /etc/security/time.conf -p wa -k MITRE:CredentialAccess:T1556.003:PAMTime
+
+# --- NSS Configuration ---
+-w /etc/nsswitch.conf -p wa -k CIS:Identity:NSSwitch
+# Note: /etc/nss_ldap.conf may not exist if LDAP is not configured
+# -w /etc/nss_ldap.conf -p wa -k CIS:Identity:NSSLdap

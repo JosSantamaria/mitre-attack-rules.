@@ -1,0 +1,32 @@
+# ============================================================================
+# 91-collection-search.rules - Data Collection via Search Tools
+# ============================================================================
+# Framework: MITRE ATT&CK T1081, T1119
+# Compatible: SUSE SLES 12+, SLES 15+, openSUSE Leap 15.x
+# ============================================================================
+
+# --- T1081 - Credentials in Files (Search Tools) ---
+-w /usr/bin/grep -p x -k MITRE:Collection:T1081:Grep
+-w /usr/bin/egrep -p x -k MITRE:Collection:T1081:Egrep
+-w /usr/bin/fgrep -p x -k MITRE:Collection:T1081:Fgrep
+-w /usr/bin/find -p x -k MITRE:Collection:T1081:Find
+-w /usr/bin/locate -p x -k MITRE:Collection:T1081:Locate
+-w /usr/bin/mlocate -p x -k MITRE:Collection:T1081:Mlocate
+
+# Modern search tools
+-w /usr/bin/rg -p x -k MITRE:Collection:T1081:Ripgrep
+-w /usr/bin/ag -p x -k MITRE:Collection:T1081:SilverSearcher
+-w /usr/bin/ack -p x -k MITRE:Collection:T1081:Ack
+
+# --- Network Capture Tools ---
+-w /usr/sbin/tcpdump -p x -k MITRE:Collection:T1040:Tcpdump
+-w /usr/bin/tcpdump -p x -k MITRE:Collection:T1040:Tcpdump
+-w /usr/bin/wireshark -p x -k MITRE:Collection:T1040:Wireshark
+-w /usr/bin/tshark -p x -k MITRE:Collection:T1040:Tshark
+-w /usr/bin/rawshark -p x -k MITRE:Collection:T1040:Rawshark
+-w /usr/bin/ngrep -p x -k MITRE:Collection:T1040:Ngrep
+
+# --- Network Scanning ---
+-w /usr/bin/nmap -p x -k MITRE:Discovery:T1046:Nmap
+-w /usr/bin/masscan -p x -k MITRE:Discovery:T1046:Masscan
+-w /usr/sbin/traceroute -p x -k MITRE:Discovery:T1016:Traceroute

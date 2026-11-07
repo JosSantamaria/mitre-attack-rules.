@@ -1,0 +1,35 @@
+# ============================================================================
+# 97-containers-virtualization.rules - Container and Virtualization
+# ============================================================================
+# Framework: MITRE ATT&CK T1610, T1612
+# Compatible: SUSE SLES 12+, SLES 15+, openSUSE Leap 15.x
+# ============================================================================
+
+# --- T1610 - Deploy Container ---
+# Docker
+-w /usr/bin/docker -p x -k MITRE:Execution:T1610:Docker
+-w /usr/bin/dockerd -p x -k MITRE:Execution:T1610:Dockerd
+-w /usr/bin/docker-containerd -p x -k MITRE:Execution:T1610:Containerd
+-w /usr/bin/docker-runc -p x -k MITRE:Execution:T1610:Runc
+# Note: Docker directories only exist if Docker is installed
+# -w /var/lib/docker/ -p wa -k MITRE:Execution:T1610:DockerLib
+-w /etc/docker/ -p wa -k MITRE:Execution:T1610:DockerConfig
+-w /etc/sysconfig/docker -p wa -k MITRE:Execution:T1610:DockerSysconfig
+-w /usr/lib/systemd/system/docker.service -p wa -k MITRE:Execution:T1610:DockerService
+-w /usr/lib/systemd/system/docker.socket -p wa -k MITRE:Execution:T1610:DockerSocket
+
+# Podman (SUSE preferred)
+-w /usr/bin/podman -p x -k MITRE:Execution:T1610:Podman
+-w /etc/containers/ -p wa -k MITRE:Execution:T1610:ContainersConfig
+
+# Kubernetes
+-w /usr/bin/kubectl -p x -k MITRE:Execution:T1610:Kubectl
+-w /usr/bin/kubelet -p x -k MITRE:Execution:T1610:Kubelet
+
+# --- Virtualization ---
+-w /usr/bin/qemu-system-x86_64 -p x -k MITRE:Execution:Virtualization:Qemu
+-w /usr/bin/qemu-img -p x -k MITRE:Execution:Virtualization:QemuImg
+-w /usr/bin/qemu-kvm -p x -k MITRE:Execution:Virtualization:QemuKvm
+-w /usr/bin/virsh -p x -k MITRE:Execution:Virtualization:Virsh
+-w /usr/bin/virt-manager -p x -k MITRE:Execution:Virtualization:VirtManager
+-w /usr/bin/VBoxManage -p x -k MITRE:Execution:Virtualization:VBoxManage

@@ -1,0 +1,37 @@
+# ============================================================================
+# 31-privilege-mitre-extended.rules - Extended Privilege Escalation
+# ============================================================================
+# Framework: MITRE ATT&CK TA0004 (Privilege Escalation)
+# Compatible: SUSE SLES 12+, SLES 15+, openSUSE Leap 15.x
+# ============================================================================
+
+# --- Kernel Module Loading (T1547.006) ---
+# Note: Some paths may not exist on all systems - using -w instead of -a with path
+-w /sbin/insmod -p x -k MITRE:Persistence:T1547.006:KernelModules
+-w /sbin/modprobe -p x -k MITRE:Persistence:T1547.006:KernelModules
+-w /sbin/rmmod -p x -k MITRE:Persistence:T1547.006:KernelModules
+-w /usr/sbin/insmod -p x -k MITRE:Persistence:T1547.006:KernelModules
+-w /usr/sbin/modprobe -p x -k MITRE:Persistence:T1547.006:KernelModules
+-w /usr/sbin/rmmod -p x -k MITRE:Persistence:T1547.006:KernelModules
+
+# Kernel module syscalls
+-a always,exit -F arch=b64 -S finit_module -S init_module -S delete_module -F auid!=-1 -k MITRE:Persistence:T1547.006:KernelModuleSyscall
+
+# Modprobe configuration
+-w /etc/modprobe.conf -p wa -k MITRE:Persistence:T1547.006:ModprobeConfig
+-w /etc/modprobe.d/ -p wa -k MITRE:Persistence:T1547.006:ModprobeConfig
+
+# --- Kernel Parameters (T1082) ---
+-w /etc/sysctl.conf -p wa -k MITRE:Discovery:T1082:SysctlConfig
+-w /etc/sysctl.d/ -p wa -k MITRE:Discovery:T1082:SysctlConfig
+
+# --- Capability Changes ---
+-a always,exit -F arch=b64 -S capset -F key=MITRE:PrivilegeEscalation:T1548:CapabilityChange
+
+# --- Root Command Execution ---
+# Track commands executed as root by non-root users
+-a always,exit -F arch=b64 -F euid=0 -F auid>=1000 -F auid!=-1 -S execve -k MITRE:PrivilegeEscalation:RootCmd
+
+# --- Power Abuse Detection ---
+# Detect admin accessing user home directories
+-a always,exit -F dir=/home -F uid=0 -F auid>=1000 -F auid!=-1 -C auid!=obj_uid -k MITRE:PrivilegeEscalation:PowerAbuse

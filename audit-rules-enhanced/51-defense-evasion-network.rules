@@ -1,0 +1,35 @@
+# ============================================================================
+# 51-defense-evasion-network.rules - Network Defense Evasion
+# ============================================================================
+# Framework: MITRE ATT&CK T1565.001, T1557
+# Compatible: SUSE SLES 12+, SLES 15+, openSUSE Leap 15.x
+# ============================================================================
+
+# --- T1565.001 - Data Manipulation: Stored Data Manipulation ---
+# Network configuration files that could be manipulated
+-w /etc/hosts -p wa -k MITRE:DefenseEvasion:T1565.001:Hosts
+-w /etc/hostname -p wa -k MITRE:DefenseEvasion:T1565.001:Hostname
+-w /etc/resolv.conf -p wa -k MITRE:DefenseEvasion:T1565.001:DNS
+-w /etc/host.conf -p wa -k MITRE:DefenseEvasion:T1565.001:HostConf
+
+# --- Network Configuration Changes ---
+-w /etc/sysconfig/network -p wa -k MITRE:DefenseEvasion:T1565.001:NetworkConfig
+# Note: /etc/sysconfig/network-scripts/ is RHEL-specific, not present in SUSE
+# -w /etc/sysconfig/network-scripts/ -p w -k MITRE:DefenseEvasion:T1565.001:NetworkScripts
+-w /etc/network/ -p wa -k MITRE:DefenseEvasion:T1565.001:NetworkDir
+-a always,exit -F arch=b64 -F dir=/etc/NetworkManager/ -F perm=wa -k MITRE:DefenseEvasion:T1565.001:NetworkManager
+
+# --- Hostname Changes via Syscall ---
+-a always,exit -F arch=b64 -S sethostname -S setdomainname -k MITRE:DefenseEvasion:T1565.001:HostnameChange
+
+# --- T1557 - Adversary-in-the-Middle ---
+# Monitor network interface configuration
+-w /sbin/ifconfig -p x -k MITRE:DefenseEvasion:T1557:Ifconfig
+-w /usr/sbin/ifconfig -p x -k MITRE:DefenseEvasion:T1557:Ifconfig
+-w /sbin/ip -p x -k MITRE:DefenseEvasion:T1557:IpCommand
+-w /usr/sbin/ip -p x -k MITRE:DefenseEvasion:T1557:IpCommand
+
+# --- Issue Files (Banner Manipulation) ---
+-w /etc/issue -p wa -k MITRE:DefenseEvasion:T1565.001:Issue
+-w /etc/issue.net -p wa -k MITRE:DefenseEvasion:T1565.001:IssueNet
+-w /etc/motd -p wa -k MITRE:DefenseEvasion:T1565.001:Motd

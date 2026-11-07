@@ -1,0 +1,47 @@
+# ============================================================================
+# 95-software-mgmt.rules - Software Management (CIS + MITRE T1072)
+# ============================================================================
+# Framework: CIS Benchmark, MITRE ATT&CK T1072 (Software Deployment Tools)
+# Compatible: SUSE SLES 12+, SLES 15+, openSUSE Leap 15.x
+# ============================================================================
+
+# --- SUSE/openSUSE Package Managers ---
+-w /usr/bin/zypper -p x -k CIS:Software:T1072:Zypper
+-w /usr/bin/rpm -p x -k CIS:Software:T1072:RPM
+-w /bin/rpm -p x -k CIS:Software:T1072:RPM
+-w /sbin/yast -p x -k CIS:Software:T1072:YaST
+-w /sbin/yast2 -p x -k CIS:Software:T1072:YaST2
+-w /usr/sbin/yast -p x -k CIS:Software:T1072:YaST
+-w /usr/sbin/yast2 -p x -k CIS:Software:T1072:YaST2
+
+# --- RPM-based (RedHat/CentOS compatibility) ---
+-w /usr/bin/yum -p x -k CIS:Software:T1072:Yum
+-w /usr/bin/dnf -p x -k CIS:Software:T1072:DNF
+
+# --- Debian-based (if installed) ---
+-w /usr/bin/dpkg -p x -k CIS:Software:T1072:Dpkg
+-w /usr/bin/apt -p x -k CIS:Software:T1072:Apt
+-w /usr/bin/apt-get -p x -k CIS:Software:T1072:AptGet
+
+# --- Third-Party Package Managers ---
+# Python
+-w /usr/bin/pip -p x -k CIS:Software:T1072:Pip
+-w /usr/bin/pip3 -p x -k CIS:Software:T1072:Pip3
+-w /usr/local/bin/pip -p x -k CIS:Software:T1072:Pip
+-w /usr/local/bin/pip3 -p x -k CIS:Software:T1072:Pip3
+-w /usr/bin/pipx -p x -k CIS:Software:T1072:Pipx
+
+# Node.js
+-w /usr/bin/npm -p x -k CIS:Software:T1072:Npm
+-w /usr/local/bin/npm -p x -k CIS:Software:T1072:Npm
+-w /usr/bin/yarn -p x -k CIS:Software:T1072:Yarn
+
+# Ruby
+-w /usr/bin/gem -p x -k CIS:Software:T1072:RubyGem
+
+# Perl
+-w /usr/bin/cpan -p x -k CIS:Software:T1072:CPAN
+
+# Snap/Flatpak
+-w /usr/bin/snap -p x -k CIS:Software:T1072:Snap
+-w /usr/bin/flatpak -p x -k CIS:Software:T1072:Flatpak

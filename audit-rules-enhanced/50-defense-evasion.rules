@@ -1,0 +1,32 @@
+# ============================================================================
+# 50-defense-evasion.rules - Defense Evasion Detection
+# ============================================================================
+# Framework: MITRE ATT&CK TA0005 (Defense Evasion)
+# Techniques: T1562, T1070, T1027, T1014
+# Compatible: SUSE SLES 12+, SLES 15+, openSUSE Leap 15.x
+# ============================================================================
+
+# --- T1562.004 - Disable or Modify System Firewall ---
+-w /usr/bin/firewall-cmd -p x -k MITRE:DefenseEvasion:T1562.004:FirewallCmd
+-w /usr/sbin/iptables -p x -k MITRE:DefenseEvasion:T1562.004:Iptables
+-w /sbin/iptables -p x -k MITRE:DefenseEvasion:T1562.004:Iptables
+-w /usr/sbin/ip6tables -p x -k MITRE:DefenseEvasion:T1562.004:Ip6tables
+-w /sbin/ip6tables -p x -k MITRE:DefenseEvasion:T1562.004:Ip6tables
+-w /usr/sbin/nft -p x -k MITRE:DefenseEvasion:T1562.004:Nftables
+-w /sbin/xtables-nft-multi -p x -k MITRE:DefenseEvasion:T1562.004:XtablesNft
+-w /usr/sbin/arptables -p x -k MITRE:DefenseEvasion:T1562.004:Arptables
+-w /usr/sbin/ebtables -p x -k MITRE:DefenseEvasion:T1562.004:Ebtables
+-w /usr/sbin/ufw -p x -k MITRE:DefenseEvasion:T1562.004:Ufw
+
+# SuSEfirewall2 (SUSE specific)
+-w /usr/sbin/SuSEfirewall2 -p x -k MITRE:DefenseEvasion:T1562.004:SuSEfirewall2
+-w /etc/sysconfig/SuSEfirewall2 -p wa -k MITRE:DefenseEvasion:T1562.004:SuSEfirewall2Config
+
+# --- T1070.002 - Indicator Removal: Clear Linux or Mac System Logs ---
+-w /var/log/messages -p wa -k MITRE:DefenseEvasion:T1070.002:SyslogMessages
+-w /var/log/syslog -p wa -k MITRE:DefenseEvasion:T1070.002:Syslog
+-w /var/log/secure -p wa -k MITRE:DefenseEvasion:T1070.002:SecureLog
+-w /var/log/auth.log -p wa -k MITRE:DefenseEvasion:T1070.002:AuthLog
+
+# --- T1070.003 - Indicator Removal: Clear Command History ---
+-w /root/.bash_history -p wa -k MITRE:DefenseEvasion:T1070.003:BashHistory

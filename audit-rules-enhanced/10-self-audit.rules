@@ -1,0 +1,40 @@
+# ============================================================================
+# 10-self-audit.rules - Audit System Self-Protection
+# ============================================================================
+# Framework: MITRE ATT&CK T1562.012 (Disable or Modify Linux Audit System)
+# CIS: 4.1.1.x - Ensure audit log storage, configuration
+# Compatible: SUSE SLES 12+, SLES 15+, openSUSE Leap 15.x
+# ============================================================================
+
+# --- Audit Log Files ---
+# Monitor access and modifications to audit logs
+-w /var/log/audit/ -p wra -k MITRE:DefenseEvasion:T1562.012:AuditLogs
+-w /var/audit/ -p wra -k MITRE:DefenseEvasion:T1562.012:AuditLogs
+
+# --- Audit Configuration ---
+# Monitor changes to audit daemon configuration
+-w /etc/audit/ -p wa -k MITRE:DefenseEvasion:T1562.012:AuditConfig
+-w /etc/audit/auditd.conf -p wa -k MITRE:DefenseEvasion:T1562.012:AuditConfig
+-w /etc/audit/audit.rules -p wa -k MITRE:DefenseEvasion:T1562.012:AuditConfig
+-w /etc/audit/rules.d/ -p wa -k MITRE:DefenseEvasion:T1562.012:AuditConfig
+-w /etc/libaudit.conf -p wa -k MITRE:DefenseEvasion:T1562.012:AuditConfig
+
+# --- Audit Dispatcher Configuration ---
+-w /etc/audisp/ -p wa -k MITRE:DefenseEvasion:T1562.012:AudispConfig
+-w /etc/audit/plugins.d/ -p wa -k MITRE:DefenseEvasion:T1562.012:AudispConfig
+
+# --- Audit Tools Execution ---
+# Monitor use of audit management tools
+-w /sbin/auditctl -p x -k MITRE:DefenseEvasion:T1562.012:AuditTools
+-w /sbin/auditd -p x -k MITRE:DefenseEvasion:T1562.012:AuditTools
+-w /usr/sbin/auditctl -p x -k MITRE:DefenseEvasion:T1562.012:AuditTools
+-w /usr/sbin/auditd -p x -k MITRE:DefenseEvasion:T1562.012:AuditTools
+-w /usr/sbin/augenrules -p x -k MITRE:DefenseEvasion:T1562.012:AuditTools
+
+# --- Audit Query Tools ---
+# Monitor access to audit trail analysis tools
+-a always,exit -F path=/usr/sbin/ausearch -F perm=x -k MITRE:DefenseEvasion:T1562.012:AuditQuery
+-a always,exit -F path=/usr/sbin/aureport -F perm=x -k MITRE:DefenseEvasion:T1562.012:AuditQuery
+-a always,exit -F path=/usr/sbin/aulast -F perm=x -k MITRE:DefenseEvasion:T1562.012:AuditQuery
+-a always,exit -F path=/usr/sbin/aulastlogin -F perm=x -k MITRE:DefenseEvasion:T1562.012:AuditQuery
+-a always,exit -F path=/usr/sbin/auvirt -F perm=x -k MITRE:DefenseEvasion:T1562.012:AuditQuery

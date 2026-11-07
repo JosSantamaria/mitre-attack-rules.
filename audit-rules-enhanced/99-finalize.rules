@@ -1,0 +1,49 @@
+# ============================================================================
+# 99-finalize.rules - Finalization and High-Volume Rules
+# ============================================================================
+# Framework: CIS Benchmark, MITRE ATT&CK
+# Compatible: SUSE SLES 12+, SLES 15+, openSUSE Leap 15.x
+# ============================================================================
+
+# --- File Deletion Events (T1070.004) ---
+# Track file deletions by users
+# Note: On x86_64, use only unlinkat and renameat (unlink/rename/rmdir are not direct syscalls)
+-a always,exit -F arch=b64 -S unlinkat -S renameat -F auid>=1000 -F auid!=-1 -k MITRE:DefenseEvasion:T1070.004:FileDelete
+
+# --- Unauthorized File Access Attempts ---
+# Note: On x86_64, creat/open are not direct syscalls - use openat
+-a always,exit -F arch=b64 -S openat -S open_by_handle_at -S truncate -S ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=-1 -k CIS:FileAccess:Denied
+-a always,exit -F arch=b64 -S openat -S open_by_handle_at -S truncate -S ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=-1 -k CIS:FileAccess:Denied
+
+# --- Critical Directory Access Failures ---
+# Note: Using openat instead of open for x86_64 compatibility
+-a always,exit -F arch=b64 -S openat -F dir=/etc -F success=0 -k CIS:CriticalAccess:Etc
+-a always,exit -F arch=b64 -S openat -F dir=/bin -F success=0 -k CIS:CriticalAccess:Bin
+-a always,exit -F arch=b64 -S openat -F dir=/sbin -F success=0 -k CIS:CriticalAccess:Sbin
+-a always,exit -F arch=b64 -S openat -F dir=/usr/bin -F success=0 -k CIS:CriticalAccess:UsrBin
+-a always,exit -F arch=b64 -S openat -F dir=/usr/sbin -F success=0 -k CIS:CriticalAccess:UsrSbin
+
+# --- 32-bit ABI Exploitation Detection ---
+# On 64-bit systems, 32-bit syscalls may indicate exploitation attempts
+# Note: Disabled - can cause "arch elf mapping not found" errors on some systems
+# -a always,exit -F arch=b32 -S execve -k MITRE:DefenseEvasion:T1055:32bitExec
+
+# --- Power State Changes ---
+-w /sbin/shutdown -p x -k CIS:System:Shutdown
+-w /sbin/poweroff -p x -k CIS:System:Poweroff
+-w /sbin/reboot -p x -k CIS:System:Reboot
+-w /sbin/halt -p x -k CIS:System:Halt
+
+# ============================================================================
+# MAKE CONFIGURATION IMMUTABLE
+# ============================================================================
+# STATUS: DISABLED FOR TESTING PHASE
+# 
+# WARNING: Once enabled (-e 2), audit rules cannot be changed without a reboot.
+# This provides protection against attackers disabling audit, but makes
+# troubleshooting more difficult during testing.
+#
+# TESTING PHASE: Keep commented (current state)
+# PRODUCTION: Uncomment the line below after successful testing
+#
+# -e 2

@@ -1,0 +1,31 @@
+# ============================================================================
+# 42-persistence-systemd.rules - Systemd Service Persistence
+# ============================================================================
+# Framework: MITRE ATT&CK T1543.002 (Create or Modify System Process: Systemd)
+# Compatible: SUSE SLES 12+, SLES 15+, openSUSE Leap 15.x
+# ============================================================================
+
+# --- T1543.002 - Systemd Service ---
+# Systemd binary
+-w /bin/systemctl -p x -k MITRE:Persistence:T1543.002:Systemctl
+-w /usr/bin/systemctl -p x -k MITRE:Persistence:T1543.002:Systemctl
+
+# Systemd configuration directories
+-w /etc/systemd/ -p wa -k MITRE:Persistence:T1543.002:SystemdConfig
+-w /usr/lib/systemd/ -p wa -k MITRE:Persistence:T1543.002:SystemdLib
+-w /lib/systemd/ -p wa -k MITRE:Persistence:T1543.002:SystemdLib
+
+# Systemd generators (T1543.002)
+-w /etc/systemd/system-generators/ -p wa -k MITRE:Persistence:T1543.002:SystemdGenerator
+-w /usr/local/lib/systemd/system-generators/ -p wa -k MITRE:Persistence:T1543.002:SystemdGenerator
+-w /usr/lib/systemd/system-generators/ -p wa -k MITRE:Persistence:T1543.002:SystemdGenerator
+-w /etc/systemd/user-generators/ -p wa -k MITRE:Persistence:T1543.002:SystemdGenerator
+-w /usr/local/lib/systemd/user-generators/ -p wa -k MITRE:Persistence:T1543.002:SystemdGenerator
+-w /lib/systemd/system-generators/ -p wa -k MITRE:Persistence:T1543.002:SystemdGenerator
+
+# --- T1547.001 - Boot or Logon Autostart: Init Scripts ---
+-w /etc/inittab -p wa -k MITRE:Persistence:T1547.001:Inittab
+-w /etc/init.d/ -p wa -k MITRE:Persistence:T1547.001:InitD
+-w /etc/init/ -p wa -k MITRE:Persistence:T1547.001:Init
+-w /etc/rc.d/ -p wa -k MITRE:Persistence:T1547.001:RcD
+-w /etc/rc.local -p wa -k MITRE:Persistence:T1547.001:RcLocal

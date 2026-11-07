@@ -1,0 +1,18 @@
+# ============================================================================
+# Exclusiones - Procesos que no deben ser auditados
+# ============================================================================
+# Este archivo contiene reglas de exclusión para reducir el ruido
+# y mejorar el rendimiento del sistema de auditoría.
+# ============================================================================
+
+# Excluir Fluent Bit (genera demasiados eventos redundantes)
+# Fluent Bit ya está monitoreando los logs de audit, no necesitamos
+# auditar sus propias operaciones
+-a always,exclude -F exe=/usr/bin/fluent-bit
+
+# Excluir VMware Tools (ruido de operaciones de hipervisor)
+-a always,exclude -F exe=/usr/bin/vmtoolsd
+
+# Nota: Las reglas de exclusión deben ir ANTES de las reglas de captura
+# para que tengan efecto. Este archivo (01-exclusions.rules) se carga
+# después de 00-config.rules pero antes de las reglas principales.

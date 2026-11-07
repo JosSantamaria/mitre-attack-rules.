@@ -1,0 +1,26 @@
+# ============================================================================
+# 00-config.rules - Base Audit Configuration
+# ============================================================================
+# Framework: Base Configuration
+# Compatible: SUSE SLES 12+, SLES 15+, openSUSE Leap 15.x
+# Reference: CIS Benchmark, Neo23x0, Linux Audit Project
+# ============================================================================
+
+# Remove any existing rules
+-D
+
+# Buffer Size - Increase for high-volume environments
+# Recommended: 8192 for production, 32768 for high-security
+-b 8192
+
+# Failure Mode
+# 0 = silent, 1 = printk (log failure), 2 = panic (halt system)
+# Production: 1, High-Security: 2
+-f 1
+
+# Ignore errors (e.g., users/files not found)
+-i
+
+# Rate limiting - prevent audit log flooding
+# Backlog wait time in milliseconds
+--backlog_wait_time 60000
